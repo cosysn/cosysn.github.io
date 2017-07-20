@@ -7,7 +7,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>ACM Steps 1.2.5 find your present (2) 的解题报告 | 楼兰故居</title>
+  <title>软件版本号规则 | 楼兰故居</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -15,16 +15,13 @@
     <meta name="keywords" content="cosysn,c,python,shell,server,storage,ESXi,Linux,Windows,楼兰故居,存储,服务器" />
   
 
-  <meta name="description" content="描述信息Problem DescriptionIn the new year party, everybody will get a “special present”.Now it’s your turn to get your special present, a lot of presents now putting on the desk, and only one of them wil">
-<meta property="og:type" content="article">
-<meta property="og:title" content="ACM Steps 1.2.5 find your present (2) 的解题报告">
-<meta property="og:url" content="https://cosysn.github.io/2016/11/30/ACM-Steps-1-2-5-find-your-present-2-的解题报告/index.html">
+  <meta property="og:type" content="article">
+<meta property="og:title" content="软件版本号规则">
+<meta property="og:url" content="https://cosysn.github.io/2016/11/12/software-version-number-rules/index.html">
 <meta property="og:site_name" content="楼兰故居">
-<meta property="og:description" content="描述信息Problem DescriptionIn the new year party, everybody will get a “special present”.Now it’s your turn to get your special present, a lot of presents now putting on the desk, and only one of them wil">
-<meta property="og:updated_time" content="2017-07-16T10:53:26.061Z">
+<meta property="og:updated_time" content="2017-07-16T10:53:00.150Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ACM Steps 1.2.5 find your present (2) 的解题报告">
-<meta name="twitter:description" content="描述信息Problem DescriptionIn the new year party, everybody will get a “special present”.Now it’s your turn to get your special present, a lot of presents now putting on the desk, and only one of them wil">
+<meta name="twitter:title" content="软件版本号规则">
 
   
 
@@ -166,20 +163,20 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#描述信息"><span class="toc-text">描述信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方案"><span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#解题思路"><span class="toc-text">解题思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码"><span class="toc-text">代码</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#版本号命名格式"><span class="toc-text">版本号命名格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#版本号管理策略"><span class="toc-text">版本号管理策略</span></a></li></ol>
   </div>
 
 
 
 <div class="content content-post CENTER">
-   <article id="post-ACM-Steps-1-2-5-find-your-present-2-的解题报告" class="article article-type-post" itemprop="blogPost">
+   <article id="post-software-version-number-rules" class="article article-type-post" itemprop="blogPost">
   <header class="article-header">
-    <h1 class="post-title">ACM Steps 1.2.5 find your present (2) 的解题报告</h1>
+    <h1 class="post-title">软件版本号规则</h1>
 
     <div class="article-meta">
       <span>
         <i class="icon-calendar"></i>
-        <span>2016.11.30</span>
+        <span>2016.11.12</span>
       </span>
 
       
@@ -195,7 +192,7 @@
       
         <span>
           <i class="icon-comment"></i>
-          <a href="https://cosysn.github.io//2016/11/30/ACM-Steps-1-2-5-find-your-present-2-的解题报告/#disqus_thread"></a>
+          <a href="https://cosysn.github.io//2016/11/12/software-version-number-rules/#disqus_thread"></a>
         </span>
       
 
@@ -214,24 +211,54 @@
 
   <div class="article-content">
     
-      <h2 id="描述信息"><a href="#描述信息" class="headerlink" title="描述信息"></a>描述信息</h2><p>Problem Description<br>In the new year party, everybody will get a “special present”.Now it’s your turn to get your special present, a lot of presents now putting on the desk, and only one of them will be yours.Each present has a card number on it, and your present’s card number will be the one that different from all the others, and you can assume that only one number appear odd times.For example, there are 5 present, and their card numbers are 1, 2, 3, 2, 1.so your present will be the one with the card number of 3, because 3 is the number that different from all the others.</p>
-<p>Input<br>The input file will consist of several cases.<br>Each case will be presented by an integer n (1&lt;=n&lt;1000000, and n is odd) at first. Following that, n positive integers will be given in a line, all integers will smaller than 2^31. These numbers indicate the card numbers of the presents.n = 0 ends the input.</p>
-<p>Output<br>For each case, output an integer in a line, which is the card number of your present. </p>
-<p>Sample Input<br>5<br>1 1 3 2 2<br>3<br>1 2 1<br>0</p>
-<p>Sample Output<br>3<br>2</p>
-<p>Hint<br>Hint</p>
-<p>use scanf to avoid Time Limit Exceeded</p>
-<p>Author<br>8600</p>
-<p>Source<br>HDU 2007-Spring Programming Contest - Warm Up （1）</p>
-<p>Recommend<br>8600</p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><p>从题目可知，只有一个数出现的次数是奇数次，其他的数出现的次数是偶数，而我们就要找出那个出现了奇数次的数。我们可以利用位异或来求解：</p>
-<ol>
-<li>a ^ a = 0;</li>
-<li>0 ^ a = a;</li>
-<li>a ^ b = b ^ a;</li>
+      <!--
+  @author: cosysn    
+  @time: 2014/11/18     
+  @license: GPLv2
+  @contact: cosysn@163.com
+
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 3
+  of the License, or (at your option) any later version.     
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with GNU Emacs; see the file COPYING.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
+
+  Copyright (c) 2014 cosysn, Colibri Team, All Rights Reserved.
+end!
+-->
+<a id="more"></a>
+<h2 id="版本号命名格式"><a href="#版本号命名格式" class="headerlink" title="版本号命名格式"></a>版本号命名格式</h2><p>主版本号.次版本号[修正版本号[.编译版本号]]</p>
+<p><code>Marjor_version_Number.Minor.Version.Number[.Resvision_Number[.Build Number]]</code></p>
+<p>版本号由二至四个部分组成：主版本号、次版本号、内部版本号和修订号。主版本号和次版本号是必选的；内部版本号和修订号是可选的，但是如果定义了修订号部分，则内部版本号就是必选的。所有定义的部分都必须是大于或等于 <code>0</code> 的整数。 应根据下面的约定使用这些部分： </p>
+<ul>
+<li><p><code>Major</code>：具有相同名称但不同主版本号的程序集不可互换。例如，这适用于对产品的大量重写，这些重写使得无法实现向后兼容性。 </p>
+</li>
+<li><p><code>Minor</code>：如果两个程序集的名称和主版本号相同，而次版本号不同，这指示显著增强，但照顾到了向后兼容性。例如，这适用于产品的修正版或完全向后兼容的新版本。 </p>
+</li>
+<li><p><code>Build</code>：内部版本号的不同表示对相同源所作的重新编译。这适合于更改处理器、平台或编译器的情况。</p>
+</li>
+<li><p><code>Revision</code>：名称、主版本号和次版本号都相同但修订号不同的程序集应是完全可互换的。这适用于修复以前发布的程序集中的安全漏洞。程序集的只有内部版本号或修订号不同的后续版本被认为是先前版本的修补程序 <code>(Hotfix)</code> 更新。 </p>
+</li>
+</ul>
+<h2 id="版本号管理策略"><a href="#版本号管理策略" class="headerlink" title="版本号管理策略"></a>版本号管理策略</h2><ol>
+<li>项目出版本，版本号为<code>0.1</code>；</li>
+<li>当项目进行了局部修正或<code>BUG</code>修复时，主版本和子版本号都不变，修正版本号递增<code>1</code></li>
+<li>当项目增加了部分功能,主版本号不变，子版本号递增<code>1</code>，同时将修正版本置<code>0</code>。 </li>
+<li>当项目进行了重大修改或局部修改积累较多时，将导致项目的全局变化时，主版本号递增<code>1</code>；</li>
+<li>编译版本号一版由编译器在编译过程中自动生成，我们只定义其格式，并不进行控制；</li>
+<li>当修正版本号为<code>0</code>时，可以省略不写。如初始版本应该是<code>0.1.0</code>，可简写成<code>0.1</code>；</li>
+<li>还可以在版本号的后面加入 <code>alpha</code>、<code>beta</code>、<code>gamma</code>、<code>rc (release candidate)</code>、<code>release</code>、<code>stable</code> 等后缀，在这些后缀后面还可以加数字的版本号。</li>
 </ol>
-<p>可以得知：<br>如果一个数进行奇数次异或之后其值为其本身，一个数进行偶数次异或之后其值为0。</p>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line">&nbsp</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> i, n;</div><div class="line">    <span class="keyword">int</span> num;</div><div class="line">    <span class="keyword">int</span> res;</div><div class="line">&nbsp</div><div class="line">    <span class="keyword">while</span>((<span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;n) != EOF) &amp;&amp; (n != <span class="number">0</span>)) &#123;</div><div class="line">        res = <span class="number">0</span>;</div><div class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; n; i++) &#123;</div><div class="line">            <span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;num);</div><div class="line">            res ^= num;</div><div class="line">        &#125;</div><div class="line">&nbsp</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, res);</div><div class="line">    &#125;</div><div class="line">&nbsp</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
     
   </div>
 </article>
@@ -376,7 +403,7 @@
   <script>
     var disqus_shortname = 'forsigner';
     
-    var disqus_url = 'https://cosysn.github.io/2016/11/30/ACM-Steps-1-2-5-find-your-present-2-的解题报告/';
+    var disqus_url = 'https://cosysn.github.io/2016/11/12/software-version-number-rules/';
     
     (function(){
       var dsq = document.createElement('script');
