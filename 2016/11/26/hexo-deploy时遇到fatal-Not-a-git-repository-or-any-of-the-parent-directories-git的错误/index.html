@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>使用hexo deploy时遇到fatal: Not a git repository (or any of the parent directories): .git的错误 | 楼兰故居</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="cosysn,c,python,shell,server,storage,ESXi,Linux,Windows,楼兰故居,存储,服务器" />
+  
+
+  <meta name="description" content="描述信息当使用hexo deploy命令将博客部署到github上是出现下面的错误信息：12345678910111213141516171819202122232425262728293031Cosysn@Cosysn-PC MINGW64 /h/Dev/myBlog/cosysn.github.io$ hexo deployINFO  Deploying: gitINFO  Clearing">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用hexo deploy时遇到fatal: Not a git repository (or any of the parent directories): .git的错误">
+<meta property="og:url" content="https://cosysn.github.io/2016/11/26/hexo-deploy时遇到fatal-Not-a-git-repository-or-any-of-the-parent-directories-git的错误/index.html">
+<meta property="og:site_name" content="楼兰故居">
+<meta property="og:description" content="描述信息当使用hexo deploy命令将博客部署到github上是出现下面的错误信息：12345678910111213141516171819202122232425262728293031Cosysn@Cosysn-PC MINGW64 /h/Dev/myBlog/cosysn.github.io$ hexo deployINFO  Deploying: gitINFO  Clearing">
+<meta property="og:updated_time" content="2017-07-16T10:53:45.162Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用hexo deploy时遇到fatal: Not a git repository (or any of the parent directories): .git的错误">
+<meta name="twitter:description" content="描述信息当使用hexo deploy命令将博客部署到github上是出现下面的错误信息：12345678910111213141516171819202122232425262728293031Cosysn@Cosysn-PC MINGW64 /h/Dev/myBlog/cosysn.github.io$ hexo deployINFO  Deploying: gitINFO  Clearing">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=d671a41f" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#描述信息"><span class="toc-text">描述信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方案"><span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-text">参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-hexo-deploy时遇到fatal-Not-a-git-repository-or-any-of-the-parent-directories-git的错误" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">使用hexo deploy时遇到fatal: Not a git repository (or any of the parent directories): .git的错误</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.11.26</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>CosySN</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="https://cosysn.github.io//2016/11/26/hexo-deploy时遇到fatal-Not-a-git-repository-or-any-of-the-parent-directories-git的错误/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <a id="more"></a>
+<h2 id="描述信息"><a href="#描述信息" class="headerlink" title="描述信息"></a>描述信息</h2><p>当使用hexo deploy命令将博客部署到github上是出现下面的错误信息：<br><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">Cosysn@Cosysn-PC MINGW64 /h/Dev/myBlog/cosysn.github.io</div><div class="line">$ hexo deploy</div><div class="line">INFO  Deploying: git</div><div class="line">INFO  Clearing .deploy_git folder...</div><div class="line">INFO  Copying files from public folder...</div><div class="line">fatal: Not a git repository (or any of the parent directories): .git</div><div class="line">FATAL Something's wrong. Maybe you can find the solution here: http://hexo.io/docs/troubleshooting.html</div><div class="line">Error: fatal: Not a git repository (or any of the parent directories): .git</div><div class="line">&nbsp</div><div class="line">    at ChildProcess.&lt;anonymous&gt; (H:<span class="symbol">\D</span>ev<span class="symbol">\m</span>yBlog<span class="symbol">\c</span>osysn.github.io<span class="symbol">\n</span>ode_modules<span class="symbol">\h</span>exo-deployer-git<span class="symbol">\n</span>ode_modules<span class="symbol">\h</span>exo-util<span class="symbol">\l</span>ib<span class="symbol">\s</span>pawn.js:37:17)</div><div class="line">    at emitTwo (events.js:87:13)</div><div class="line">    at ChildProcess.emit (events.js:172:7)</div><div class="line">    at ChildProcess.cp.emit (H:<span class="symbol">\D</span>ev<span class="symbol">\m</span>yBlog<span class="symbol">\c</span>osysn.github.io<span class="symbol">\n</span>ode_modules<span class="symbol">\h</span>exo-deployer-git<span class="symbol">\n</span>ode_modules<span class="symbol">\h</span>exo-util<span class="symbol">\n</span>ode_modules<span class="symbol">\c</span>ross-spawn<span class="symbol">\l</span>ib<span class="symbol">\e</span>noent.js:40:29)</div><div class="line">    at maybeClose (internal/child_process.js:829:16)</div><div class="line">    at Socket.&lt;anonymous&gt; (internal/child_process.js:319:11)</div><div class="line">    at emitOne (events.js:77:13)</div><div class="line">    at Socket.emit (events.js:169:7)</div><div class="line">    at Pipe._onclose (net.js:486:12)</div><div class="line">FATAL fatal: Not a git repository (or any of the parent directories): .git</div><div class="line">&nbsp</div><div class="line">Error: fatal: Not a git repository (or any of the parent directories): .git</div><div class="line">&nbsp</div><div class="line">    at ChildProcess.&lt;anonymous&gt; (H:<span class="symbol">\D</span>ev<span class="symbol">\m</span>yBlog<span class="symbol">\c</span>osysn.github.io<span class="symbol">\n</span>ode_modules<span class="symbol">\h</span>exo-deployer-git<span class="symbol">\n</span>ode_modules<span class="symbol">\h</span>exo-util<span class="symbol">\l</span>ib<span class="symbol">\s</span>pawn.js:37:17)</div><div class="line">    at emitTwo (events.js:87:13)</div><div class="line">    at ChildProcess.emit (events.js:172:7)</div><div class="line">    at ChildProcess.cp.emit (H:<span class="symbol">\D</span>ev<span class="symbol">\m</span>yBlog<span class="symbol">\c</span>osysn.github.io<span class="symbol">\n</span>ode_modules<span class="symbol">\h</span>exo-deployer-git<span class="symbol">\n</span>ode_modules<span class="symbol">\h</span>exo-util<span class="symbol">\n</span>ode_modules<span class="symbol">\c</span>ross-spawn<span class="symbol">\l</span>ib<span class="symbol">\e</span>noent.js:40:29)</div><div class="line">    at maybeClose (internal/child_process.js:829:16)</div><div class="line">    at Socket.&lt;anonymous&gt; (internal/child_process.js:319:11)</div><div class="line">    at emitOne (events.js:77:13)</div><div class="line">    at Socket.emit (events.js:169:7)</div><div class="line">    at Pipe._onclose (net.js:486:12)</div></pre></td></tr></table></figure></p>
+<p>检查git的配置没有问题</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>将hexo根目录下的.deploy_git/删除掉，然后使用hexo deploy重新部署就可以了。<br>但是暂时不清楚是什么原因引起的错误。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ol>
+<li>搭建hexo博客并部署到github上(<a href="http://www.tuicool.com/articles/uE7FJba/" target="_blank" rel="external">http://www.tuicool.com/articles/uE7FJba/</a>)</li>
+</ol>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持楼兰故居</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.jpg" alt="">
+          </li>
+        
+          <li class="item">
+            <img src="/images/qr-alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'https://cosysn.github.io/2016/11/26/hexo-deploy时遇到fatal-Not-a-git-repository-or-any-of-the-parent-directories-git的错误/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

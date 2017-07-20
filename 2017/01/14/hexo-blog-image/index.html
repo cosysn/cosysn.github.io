@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo博客支持图片 | 楼兰故居</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="cosysn,c,python,shell,server,storage,ESXi,Linux,Windows,楼兰故居,存储,服务器" />
+  
+
+  <meta name="description" content="之前写博客都是文字描述，今天在写文章需要引用图片时才发现我的博客不支持图片，无法将图片加载到博客当中去。 查询之后发现CodeFalling/hexo-asset-image插件可以非常方便加载本地的图片。 安装 首先确认_config.yml中有post_asset_folder:true。Assets指的是那些不在source目录下的资源，比如图片、CSS文件或者Javascript文件。He">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo博客支持图片">
+<meta property="og:url" content="https://cosysn.github.io/2017/01/14/hexo-blog-image/index.html">
+<meta property="og:site_name" content="楼兰故居">
+<meta property="og:description" content="之前写博客都是文字描述，今天在写文章需要引用图片时才发现我的博客不支持图片，无法将图片加载到博客当中去。 查询之后发现CodeFalling/hexo-asset-image插件可以非常方便加载本地的图片。 安装 首先确认_config.yml中有post_asset_folder:true。Assets指的是那些不在source目录下的资源，比如图片、CSS文件或者Javascript文件。He">
+<meta property="og:image" content="https://cosysn.github.io/2017/01/14/hexo-blog-image/logo.png">
+<meta property="og:updated_time" content="2017-07-16T10:53:39.229Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo博客支持图片">
+<meta name="twitter:description" content="之前写博客都是文字描述，今天在写文章需要引用图片时才发现我的博客不支持图片，无法将图片加载到博客当中去。 查询之后发现CodeFalling/hexo-asset-image插件可以非常方便加载本地的图片。 安装 首先确认_config.yml中有post_asset_folder:true。Assets指的是那些不在source目录下的资源，比如图片、CSS文件或者Javascript文件。He">
+<meta name="twitter:image" content="https://cosysn.github.io/2017/01/14/hexo-blog-image/logo.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=d671a41f" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用法"><span class="toc-text">用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缺陷"><span class="toc-text">缺陷</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-text">参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-hexo-blog-image" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Hexo博客支持图片</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.01.14</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>CosySN</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="https://cosysn.github.io//2017/01/14/hexo-blog-image/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>之前写博客都是文字描述，今天在写文章需要引用图片时才发现我的博客不支持图片，无法将图片加载到博客当中去。 查询之后发现<a href="https://github.com/CodeFalling/hexo-asset-image" target="_blank" rel="external">CodeFalling/hexo-asset-image</a>插件可以非常方便加载本地的图片。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ol>
+<li><p>首先确认<code>_config.yml</code>中有<code>post_asset_folder:true</code>。<br>Assets指的是那些不在source目录下的资源，比如图片、CSS文件或者Javascript文件。Hexo提供一种更方便的方法来管理这些资源（Assets）。想使其生效，首先修改 post_asset_folder 字段的设置，将其值改为 true 。<br>当生效后，在你创建文章的时候，Hexo会创建一个同名目录，你可以将该文章关联的资源全部放到该目录下。这样就可以更加方便的使用它们了。</p>
+</li>
+<li><p>在Hexo目录下，使用npm安装hexo-asset-image</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-asset-<span class="built_in">image</span> --<span class="built_in">save</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>安装完成后，用Hexo新建文章的时候就会在_post目录下创建一个和文章名字相同的目录，该文章相关联的图片可以放在这个目录下面。</p>
+</li>
+</ol>
+<h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><p>安装之后，就以本文为例介绍如何使用该插件在文章中插入图片。</p>
+<ol>
+<li>创建名字为hexo-blog-image的文章，其命令如下：</li>
+</ol>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo <span class="keyword">new</span> <span class="string">"hexo-blog-image"</span></div></pre></td></tr></table></figure>
+<p>文章创建好了之后，在_post目录下可以看到hexo-blog-image/目录，将准备好的图片放到该目录下面，如下的结构:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">hexo-blog-image</div><div class="line">├── logo.png</div><div class="line">└── rules.jpg</div><div class="line">hexo-blog-image.md</div></pre></td></tr></table></figure></p>
+<p>这样的目录结构（目录名和文章名一致），只要使用 <code>![logo](hexo-blog-image/logo.png)</code> 就可以插入图片。</p>
+<p>如下图所示：<br><img src="/2017/01/14/hexo-blog-image/logo.png" alt="logo"></p>
+<p>生成的结构为<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public/<span class="number">2017</span>/<span class="number">01</span>/<span class="number">14</span>/hexo-blog-image</div><div class="line">├── index<span class="selector-class">.html</span></div><div class="line">├── logo<span class="selector-class">.png</span></div><div class="line">└── rules.jpg</div></pre></td></tr></table></figure></p>
+<p>同时，生成的 html 是<br><code>&lt;img src=&quot;/2017/01/14/hexo-blog-image/logo.png&quot; alt=&quot;logo&quot;&gt;</code><br>而不是愚蠢的<br><code>&lt;img src=&quot;hexo-blog-image/logo.png&quot; alt=&quot;logo&quot;&gt;</code></p>
+<h2 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h2><p>因为我的博客现在是托管在<code>Github</code>上面的，现在是有容量限制的，使用本地的图片可能会导致空间很快地消耗。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] <a href="http://www.jianshu.com/p/c2ba9533088a" target="_blank" rel="external">hexo博客图片问题</a><br>[2] <a href="http://www.tuicool.com/articles/umEBVfI" target="_blank" rel="external">在 hexo 中无痛使用本地图片</a><br>[3] <a href="https://github.com/CodeFalling/hexo-asset-image" target="_blank" rel="external">CodeFalling/hexo-asset-image</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持楼兰故居</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.jpg" alt="">
+          </li>
+        
+          <li class="item">
+            <img src="/images/qr-alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'https://cosysn.github.io/2017/01/14/hexo-blog-image/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

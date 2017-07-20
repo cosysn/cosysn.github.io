@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>解析VMware ESXi/ESX中SCSI感知代码的工具 - esxi_sense | 楼兰故居</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="cosysn,c,python,shell,server,storage,ESXi,Linux,Windows,楼兰故居,存储,服务器" />
+  
+
+  <meta name="description" content="注意：本文仅用于ESXi 5.0及以以后的版本，其他的版本暂不支持。 1. 引言我们在定位ESXi或ESX出现的问题的时候，经常会在ESXi/ESX主机上的vmkernel.log或messages.log的系统日志文件中，见到类似下面的日志信息：122011-04-04T21:07:30.257Z cpu2:2050)ScsiDeviceIO: 2315: Cmd(0x4124003edb00)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解析VMware ESXi&#x2F;ESX中SCSI感知代码的工具 - esxi_sense">
+<meta property="og:url" content="https://cosysn.github.io/2016/11/26/esxi-sense-decode-解析VMware-ESXi-ESX中SCSI感知代码的工具/index.html">
+<meta property="og:site_name" content="楼兰故居">
+<meta property="og:description" content="注意：本文仅用于ESXi 5.0及以以后的版本，其他的版本暂不支持。 1. 引言我们在定位ESXi或ESX出现的问题的时候，经常会在ESXi/ESX主机上的vmkernel.log或messages.log的系统日志文件中，见到类似下面的日志信息：122011-04-04T21:07:30.257Z cpu2:2050)ScsiDeviceIO: 2315: Cmd(0x4124003edb00)">
+<meta property="og:updated_time" content="2017-07-16T10:53:32.754Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="解析VMware ESXi&#x2F;ESX中SCSI感知代码的工具 - esxi_sense">
+<meta name="twitter:description" content="注意：本文仅用于ESXi 5.0及以以后的版本，其他的版本暂不支持。 1. 引言我们在定位ESXi或ESX出现的问题的时候，经常会在ESXi/ESX主机上的vmkernel.log或messages.log的系统日志文件中，见到类似下面的日志信息：122011-04-04T21:07:30.257Z cpu2:2050)ScsiDeviceIO: 2315: Cmd(0x4124003edb00)">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=d671a41f" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-引言"><span class="toc-text">1. 引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-示例"><span class="toc-text">2. 示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-使用帮助"><span class="toc-text">3. 使用帮助</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-参考文献"><span class="toc-text">4. 参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-esxi-sense-decode-解析VMware-ESXi-ESX中SCSI感知代码的工具" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">解析VMware ESXi/ESX中SCSI感知代码的工具 - esxi_sense</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.11.26</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>CosySN</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="https://cosysn.github.io//2016/11/26/esxi-sense-decode-解析VMware-ESXi-ESX中SCSI感知代码的工具/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>注意：本文仅用于ESXi 5.0及以以后的版本，其他的版本暂不支持。</p>
+<h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1. 引言"></a>1. 引言</h2><p>我们在定位ESXi或ESX出现的问题的时候，经常会在ESXi/ESX主机上的vmkernel.log或messages.log的系统日志文件中，见到类似下面的日志信息：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">2011<span class="selector-tag">-04-04T21</span><span class="selector-pseudo">:07</span><span class="selector-pseudo">:30.257Z</span> <span class="selector-tag">cpu2</span><span class="selector-pseudo">:2050)ScsiDeviceIO</span>: 2315: <span class="selector-tag">Cmd</span>(0<span class="selector-tag">x4124003edb00</span>) 0<span class="selector-tag">x12</span>, <span class="selector-tag">CmdSN</span> 0<span class="selector-tag">x51</span> <span class="selector-tag">to</span> <span class="selector-tag">dev</span> "<span class="selector-tag">naa</span><span class="selector-class">.600508e000000000c9f6baa7c19f6900</span>" <span class="selector-tag">failed</span> <span class="selector-tag">H</span><span class="selector-pseudo">:0x0</span> <span class="selector-tag">D</span><span class="selector-pseudo">:0x2</span> <span class="selector-tag">P</span><span class="selector-pseudo">:0x0</span> <span class="selector-tag">Valid</span> <span class="selector-tag">sense</span> <span class="selector-tag">data</span>: 0<span class="selector-tag">x5</span> 0<span class="selector-tag">x24</span> 0<span class="selector-tag">x0</span>. </div><div class="line"><span class="selector-tag">Mar</span> 9 23<span class="selector-pseudo">:53</span><span class="selector-pseudo">:24</span> <span class="selector-tag">esx405</span> <span class="selector-tag">vmkernel</span>: 2<span class="selector-pseudo">:14</span><span class="selector-pseudo">:39</span><span class="selector-pseudo">:54.069</span> <span class="selector-tag">cpu3</span><span class="selector-pseudo">:4300)ScsiDeviceIO</span>: 1688: <span class="selector-tag">Command</span> 0<span class="selector-tag">x28</span> <span class="selector-tag">to</span> <span class="selector-tag">device</span> "<span class="selector-tag">naa</span><span class="selector-class">.60000970000292600219533031453245</span>" <span class="selector-tag">failed</span> <span class="selector-tag">H</span><span class="selector-pseudo">:0x1</span> <span class="selector-tag">D</span><span class="selector-pseudo">:0x0</span> <span class="selector-tag">P</span><span class="selector-pseudo">:0x3</span> <span class="selector-tag">Possible</span> <span class="selector-tag">sense</span> <span class="selector-tag">data</span>: 0<span class="selector-tag">x0</span> 0<span class="selector-tag">x0</span> 0<span class="selector-tag">x0</span>.</div></pre></td></tr></table></figure></p>
+<p>这些日志中记录了SCSI状态代码表示I/O以某种给定的状态失败。此状况对任何给定的工作负载而言可能是临时的、暂时性的、良性的或严重的，具体取决于收到的状态。如果能够从日志中记录的状态码中获得错误的原因，那么对于定位问题有很好的指导作用。</p>
+<p>找出 SCSI 事件，并关注下面十六进制值：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">H:</span><span class="number">0x0</span> <span class="string">D:</span><span class="number">0x2</span> <span class="string">P:</span><span class="number">0x0</span> Valid sense <span class="string">data:</span> <span class="number">0x5</span> <span class="number">0x24</span> <span class="number">0x0</span></div></pre></td></tr></table></figure></p>
+<p>这些SCSI状态代码表示I/O以某种给定的状态失败。此状况对任何给定的工作负载而言可能是临时的、暂时性的、良性的或严重的，具体取决于收到的状态。如果能够从日志中记录的状态码中找到错误的原因，那么对于定位问题有很大的帮助。</p>
+<p>有关如何解析这些SCSI状态码，请参见<a href="https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=289902" target="_blank" rel="external">Interpreting SCSI sense codes in VMware ESXi and ESX (289902)</a> </p>
+<p>但是如果每次出现问题都要去查一下文档，不仅费时费力，效率还低。为了提高效率，我开发了esxi_sense工具用来解析SCSI感知代码， 省去了查询文档的麻烦。</p>
+<h2 id="2-示例"><a href="#2-示例" class="headerlink" title="2. 示例"></a>2. 示例</h2><p>如果在日志文件中打印了下面的日志信息：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="number">2011</span><span class="number">-04</span><span class="number">-04</span><span class="string">T21:</span><span class="number">07</span>:<span class="number">30.257</span>Z <span class="string">cpu2:</span><span class="number">2050</span>)<span class="string">ScsiDeviceIO:</span> <span class="number">2315</span>: Cmd(<span class="number">0x4124003edb00</span>) <span class="number">0x12</span>, CmdSN <span class="number">0x51</span> to dev <span class="string">"naa.600508e000000000c9f6baa7c19f6900"</span> failed <span class="string">H:</span><span class="number">0x0</span> <span class="string">D:</span><span class="number">0x2</span> <span class="string">P:</span><span class="number">0x0</span> Valid sense <span class="string">data:</span> <span class="number">0x5</span> <span class="number">0x24</span> <span class="number">0x0</span>.</div></pre></td></tr></table></figure></p>
+<p>那么可以使用esxi_sense解析日志中的状态码。<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">root@localhost:/mnt/src<span class="meta"># ./esxi_sense -h 0x0 -d 0x2 -p 0x0 -s 0x5 -a 0x24/0x0</span></div><div class="line">==================== Host Status ======================</div><div class="line">Code: [<span class="number">0x0</span>]</div><div class="line">Name: OK</div><div class="line">Description: This status <span class="keyword">is</span> returned <span class="keyword">when</span> there <span class="keyword">is</span> no <span class="keyword">error</span> <span class="keyword">on</span> the host side. This <span class="keyword">is</span> <span class="keyword">when</span> you see <span class="keyword">if</span> there <span class="keyword">is</span> a status <span class="keyword">for</span> a device <span class="keyword">or</span> plugin. This status <span class="keyword">is</span> also <span class="keyword">when</span> you see valid sense data instead <span class="keyword">of</span> possible sense data.</div><div class="line">&nbsp</div><div class="line">==================== Device Status ======================</div><div class="line">Code: [<span class="number">0x2</span>]</div><div class="line">Name: CHECK_CONDITION</div><div class="line">Description: This status <span class="keyword">is</span> returned <span class="keyword">when</span> a command fails <span class="keyword">for</span> a specific reason. <span class="keyword">When</span> a CHECK CONDITION <span class="keyword">is</span> received, the ESX storage stack will send out a SCSI command <span class="number">0x3</span> (REQUEST SENSE) <span class="keyword">in</span> <span class="keyword">order</span> <span class="keyword">to</span> <span class="keyword">get</span> the SCSI sense data (Sense <span class="keyword">Key</span>, Additional Sense Code, ASC Qualifier, <span class="keyword">and</span> other bits). The sense data <span class="keyword">is</span> listed after Valid sense data <span class="keyword">in</span> the <span class="keyword">order</span> <span class="keyword">of</span> Sense <span class="keyword">Key</span>, Additional Sense Code, <span class="keyword">and</span> ASC Qualifier.</div><div class="line">&nbsp</div><div class="line">==================== Plugin Status ======================</div><div class="line">Code: [<span class="number">0x0</span>]</div><div class="line">Name: GOOD</div><div class="line">Description: No <span class="keyword">error</span>.(ESXi <span class="number">5.</span>x / <span class="number">6.</span>x only)</div><div class="line">&nbsp</div><div class="line">==================== Sense <span class="keyword">Key</span> ======================</div><div class="line">Code: [<span class="number">0x5</span>]</div><div class="line">Name: ILLEGAL REQUEST</div><div class="line">&nbsp</div><div class="line">==================== Additional Sense Data ======================</div><div class="line">Code: [<span class="number">0x24</span>/<span class="number">0x0</span>]</div><div class="line">Description: INVALID FIELD <span class="keyword">IN</span> CDB</div></pre></td></tr></table></figure></p>
+<p>可以看到上面解析了每个状态代码所代表的意思。</p>
+<h2 id="3-使用帮助"><a href="#3-使用帮助" class="headerlink" title="3. 使用帮助"></a>3. 使用帮助</h2><p>Usgae: esxi_sense [OPTION]…<br>Interpreting SCSI sense codes in VMware ESXi and ESX</p>
+<p>Options:<br>-h, –host                     Input the host status, the value must be an hex number.<br>-d, –device                   Input the device status, the value must be an hex number.<br>-p, –plugin                   Input the plugin status, the value must be an hex number.<br>-s, –sense-key                Input the sense key, the value must be an hex number.<br>-a, –additional-sense-data    Input the additional sense data, it is an ASC/ASCQ pair value.<br>    –help                     Display this help and exit<br>-v, –version                  Display version information and exit</p>
+<p>-h或—host，用来解析SCSI主机代码，这些代码可能来自主机适配器上的固件或来自适配器驱动冲虚控制的若干主机之一。<br>有关SCSI主机代码的详细信息，请参见 <a href="https://kb.vmware.com/selfservice/search.do?cmd=displayKC&amp;docType=kc&amp;docTypeID=DT_KB_1_1&amp;externalId=1029039" target="_blank" rel="external">Understanding SCSI host-side NMP errors/conditions in ESX 4.x and ESXi 5.x (1029039)</a>。</p>
+<p>-d或—device，用来解析SCSI设备/状态代码，SCSI状态代码表示命令处理完成之后的状态，代码值由T10委员会指定。有关详细信息，请参见 <a href="http://www.t10.org/lists/2status.htm" target="_blank" rel="external">SCSI Status Codes</a>。<br>而有关 SCSI 设备代码的其他信息，请参见 <a href="https://kb.vmware.com/selfservice/search.do?cmd=displayKC&amp;docType=kc&amp;docTypeID=DT_KB_1_1&amp;externalId=1030381" target="_blank" rel="external">Understanding SCSI device/target NMP errors/conditions in ESX/ESXi 4.x and ESXi 5.0 (1030381)</a>。</p>
+<p>-p或—plugin，用来解析VMware插件传输代码，有关 SCSI 插件 NMP 条件和错误代码的列表，请参见 <a href="https://kb.vmware.com/selfservice/search.do?cmd=displayKC&amp;docType=kc&amp;docTypeID=DT_KB_1_1&amp;externalId=2004086" target="_blank" rel="external">Understanding SCSI plug-in NMP errors/conditions in ESX/ESXi 4.x/5.x/6.0 (2004086)</a>。</p>
+<p>-s或—sense-key，用来解析SCSI感知秘钥，SCSI感知秘钥显示在命令返回CHECK CONDITION状态时可用的感知数据中。感知密钥包含了解命令失败原因所必需的所有信息。<br>有关详细信息，请参见 <a href="http://www.t10.org/lists/2sensekey.htm" target="_blank" rel="external">SCSI Sense Keys</a>。</p>
+<p>-a 或–additional-sense-data，用来解析SCSI其他感知数据，其是由两个字节组成，通常由REQUEST SENSE命令返回。其他感知代码 (ASC) 字节说明感知密钥字段中报告的错误异常的相关信息。其他感知代码限定符 (ASCQ) 表示与其他感知代码相关的详细信息。<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">|<span class="string">-&gt; ASC value (in hexadecimal)</span></div><div class="line">||</div><div class="line">||<span class="string"> </span>|<span class="string">-&gt; ASCQ value (in hexadecimal)</span></div><div class="line">||<span class="string"> </span>||</div><div class="line">||<span class="string"> </span>||<span class="string"> </span>|<span class="string">-&gt; Codes identifying devices that may use the ASC/ASCQ pair</span></div><div class="line">||<span class="string"> </span>||<span class="string"> </span>|<span class="string">-&gt; value. (See list of device code letters below.)</span></div><div class="line">||<span class="string"> </span>||<span class="string"> </span>|</div><div class="line">||<span class="string"> </span>||<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">-&gt; Error or exception indicated by the</span></div><div class="line">||<span class="string"> </span>||<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">-&gt; ASC/ASCQ pair value.</span></div><div class="line">||<span class="string"> </span>||<span class="string"> </span>|<span class="string">------------</span>|<span class="string"> </span>|<span class="string">------------------------------------------</span>|</div><div class="line">04/00 DTLPWROMAEBKVF LOGICAL UNIT NOT READY, CAUSE NOT REPORTABLE</div><div class="line">04/01 DTLPWROMAEBKVF LOGICAL UNIT IS IN PROCESS OF BECOMING READY</div><div class="line">04/02 DTLPWROMAEBKVF LOGICAL UNIT NOT READY, INITIALIZING COMMAND REQUIRED</div><div class="line">04/03 DTLPWROMAEBKVF LOGICAL UNIT NOT READY, MANUAL INTERVENTION REQUIRED</div></pre></td></tr></table></figure></p>
+<p>有关详细信息，请参见 <a href="http://www.t10.org/lists/2asc.htm" target="_blank" rel="external">SCSI Additional Sense Data</a>。</p>
+<h2 id="4-参考文献"><a href="#4-参考文献" class="headerlink" title="4. 参考文献"></a>4. 参考文献</h2><p>[1] <a href="https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=289902" target="_blank" rel="external">Interpreting SCSI sense codes in VMware ESXi and ESX (289902)</a><br>[2] <a href="https://kb.vmware.com/selfservice/search.do?cmd=displayKC&amp;docType=kc&amp;docTypeID=DT_KB_1_1&amp;externalId=1029039" target="_blank" rel="external">Understanding SCSI host-side NMP errors/conditions in ESX 4.x and ESXi 5.x (1029039)</a><br>[3] <a href="http://www.t10.org/lists/2status.htm" target="_blank" rel="external">SCSI Status Codes</a><br>[4] <a href="https://kb.vmware.com/selfservice/search.do?cmd=displayKC&amp;docType=kc&amp;docTypeID=DT_KB_1_1&amp;externalId=1030381" target="_blank" rel="external">Understanding SCSI device/target NMP errors/conditions in ESX/ESXi 4.x and ESXi 5.0 (1030381)</a><br>[5] <a href="https://kb.vmware.com/selfservice/search.do?cmd=displayKC&amp;docType=kc&amp;docTypeID=DT_KB_1_1&amp;externalId=2004086" target="_blank" rel="external">Understanding SCSI plug-in NMP errors/conditions in ESX/ESXi 4.x/5.x/6.0 (2004086)</a><br>[6] <a href="http://www.t10.org/lists/2sensekey.htm" target="_blank" rel="external">SCSI Sense Keys</a><br>[7] <a href="http://www.t10.org/lists/2asc.htm" target="_blank" rel="external">SCSI Additional Sense Data</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持楼兰故居</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.jpg" alt="">
+          </li>
+        
+          <li class="item">
+            <img src="/images/qr-alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'https://cosysn.github.io/2016/11/26/esxi-sense-decode-解析VMware-ESXi-ESX中SCSI感知代码的工具/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Storage vMotion and the Mirror Driver | 楼兰故居</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="cosysn,c,python,shell,server,storage,ESXi,Linux,Windows,楼兰故居,存储,服务器" />
+  
+
+  <meta name="description" content="在使用ESXi迁移虚拟机的时候，我在vmkernel.log中发现下面一段日志：1234567891011121314151617181920Line 2964: 2016-05-19T12:59:29.720Z cpu17:808643)SVM: 5139: SVM_MakeDev.5139: Creating device 10a80a6-819390-svmmirror: SuccessLi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Storage vMotion and the Mirror Driver">
+<meta property="og:url" content="https://cosysn.github.io/2017/01/14/storage-vmotion-and-the-mirror-driver/index.html">
+<meta property="og:site_name" content="楼兰故居">
+<meta property="og:description" content="在使用ESXi迁移虚拟机的时候，我在vmkernel.log中发现下面一段日志：1234567891011121314151617181920Line 2964: 2016-05-19T12:59:29.720Z cpu17:808643)SVM: 5139: SVM_MakeDev.5139: Creating device 10a80a6-819390-svmmirror: SuccessLi">
+<meta property="og:updated_time" content="2017-07-16T10:54:05.931Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Storage vMotion and the Mirror Driver">
+<meta name="twitter:description" content="在使用ESXi迁移虚拟机的时候，我在vmkernel.log中发现下面一段日志：1234567891011121314151617181920Line 2964: 2016-05-19T12:59:29.720Z cpu17:808643)SVM: 5139: SVM_MakeDev.5139: Creating device 10a80a6-819390-svmmirror: SuccessLi">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=d671a41f" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-storage-vmotion-and-the-mirror-driver" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Storage vMotion and the Mirror Driver</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.01.14</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>CosySN</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="https://cosysn.github.io//2017/01/14/storage-vmotion-and-the-mirror-driver/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>在使用ESXi迁移虚拟机的时候，我在vmkernel.log中发现下面一段日志：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">Line <span class="number">2964</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T12:</span><span class="number">59</span>:<span class="number">29.720</span>Z <span class="string">cpu17:</span><span class="number">808643</span>)<span class="string">SVM:</span> <span class="number">5139</span>: SVM_MakeDev<span class="number">.5139</span>: Creating device <span class="number">10</span>a80a6<span class="number">-819390</span>-<span class="string">svmmirror:</span> Success</div><div class="line">Line <span class="number">2965</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T12:</span><span class="number">59</span>:<span class="number">29.720</span>Z <span class="string">cpu17:</span><span class="number">808643</span>)<span class="string">SVM:</span> <span class="number">5188</span>: Created device <span class="number">10</span>a80a6<span class="number">-819390</span>-svmmirror, primary <span class="number">10</span>a80a6, secondary <span class="number">819390</span></div><div class="line">Line <span class="number">3094</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">00</span>:<span class="number">25.159</span>Z <span class="string">cpu21:</span><span class="number">34821</span>)<span class="string">Vol3:</span> <span class="number">2675</span>: Could not open device <span class="string">'10a80a6-819390-svmmirror'</span> <span class="keyword">for</span> <span class="string">probing:</span> Busy</div><div class="line">Line <span class="number">3095</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">00</span>:<span class="number">25.159</span>Z <span class="string">cpu21:</span><span class="number">34821</span>)<span class="string">Vol3:</span> <span class="number">1072</span>: Could not open device <span class="string">'10a80a6-819390-svmmirror'</span> <span class="keyword">for</span> volume <span class="string">open:</span> Busy</div><div class="line">Line <span class="number">3096</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">00</span>:<span class="number">25.159</span>Z <span class="string">cpu21:</span><span class="number">34821</span>)<span class="string">Vol3:</span> <span class="number">1072</span>: Could not open device <span class="string">'10a80a6-819390-svmmirror'</span> <span class="keyword">for</span> volume <span class="string">open:</span> Busy</div><div class="line">Line <span class="number">3097</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">00</span>:<span class="number">25.159</span>Z <span class="string">cpu21:</span><span class="number">34821</span>)<span class="string">FSS:</span> <span class="number">5327</span>: No FS driver claimed device <span class="string">'10a80a6-819390-svmmirror'</span>: No filesystem on the device</div><div class="line">Line <span class="number">3643</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">07</span>:<span class="number">32.032</span>Z <span class="string">cpu22:</span><span class="number">34821</span>)<span class="string">Vol3:</span> <span class="number">2675</span>: Could not open device <span class="string">'10a80a6-819390-svmmirror'</span> <span class="keyword">for</span> <span class="string">probing:</span> Busy</div><div class="line">Line <span class="number">3644</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">07</span>:<span class="number">32.032</span>Z <span class="string">cpu22:</span><span class="number">34821</span>)<span class="string">Vol3:</span> <span class="number">1072</span>: Could not open device <span class="string">'10a80a6-819390-svmmirror'</span> <span class="keyword">for</span> volume <span class="string">open:</span> Busy</div><div class="line">Line <span class="number">3645</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">07</span>:<span class="number">32.032</span>Z <span class="string">cpu22:</span><span class="number">34821</span>)<span class="string">Vol3:</span> <span class="number">1072</span>: Could not open device <span class="string">'10a80a6-819390-svmmirror'</span> <span class="keyword">for</span> volume <span class="string">open:</span> Busy</div><div class="line">Line <span class="number">3646</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">07</span>:<span class="number">32.032</span>Z <span class="string">cpu22:</span><span class="number">34821</span>)<span class="string">FSS:</span> <span class="number">5327</span>: No FS driver claimed device <span class="string">'10a80a6-819390-svmmirror'</span>: No filesystem on the device</div><div class="line">Line <span class="number">4145</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">16</span>:<span class="number">10.123</span>Z <span class="string">cpu15:</span><span class="number">34821</span>)<span class="string">Vol3:</span> <span class="number">2675</span>: Could not open device <span class="string">'10a80a6-819390-svmmirror'</span> <span class="keyword">for</span> <span class="string">probing:</span> Busy</div><div class="line">Line <span class="number">4146</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">16</span>:<span class="number">10.123</span>Z <span class="string">cpu15:</span><span class="number">34821</span>)<span class="string">Vol3:</span> <span class="number">1072</span>: Could not open device <span class="string">'10a80a6-819390-svmmirror'</span> <span class="keyword">for</span> volume <span class="string">open:</span> Busy</div><div class="line">Line <span class="number">4147</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">16</span>:<span class="number">10.123</span>Z <span class="string">cpu15:</span><span class="number">34821</span>)<span class="string">Vol3:</span> <span class="number">1072</span>: Could not open device <span class="string">'10a80a6-819390-svmmirror'</span> <span class="keyword">for</span> volume <span class="string">open:</span> Busy</div><div class="line">Line <span class="number">4148</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">16</span>:<span class="number">10.123</span>Z <span class="string">cpu15:</span><span class="number">34821</span>)<span class="string">FSS:</span> <span class="number">5327</span>: No FS driver claimed device <span class="string">'10a80a6-819390-svmmirror'</span>: No filesystem on the device</div><div class="line">Line <span class="number">4849</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">25</span>:<span class="number">12.841</span>Z <span class="string">cpu9:</span><span class="number">34803</span>)<span class="string">Vol3:</span> <span class="number">2675</span>: Could not open device <span class="string">'10a80a6-819390-svmmirror'</span> <span class="keyword">for</span> <span class="string">probing:</span> Busy</div><div class="line">Line <span class="number">4850</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">25</span>:<span class="number">12.842</span>Z <span class="string">cpu9:</span><span class="number">34803</span>)<span class="string">Vol3:</span> <span class="number">1072</span>: Could not open device <span class="string">'10a80a6-819390-svmmirror'</span> <span class="keyword">for</span> volume <span class="string">open:</span> Busy</div><div class="line">Line <span class="number">4851</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">25</span>:<span class="number">12.842</span>Z <span class="string">cpu9:</span><span class="number">34803</span>)<span class="string">Vol3:</span> <span class="number">1072</span>: Could not open device <span class="string">'10a80a6-819390-svmmirror'</span> <span class="keyword">for</span> volume <span class="string">open:</span> Busy</div><div class="line">Line <span class="number">4852</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">25</span>:<span class="number">12.842</span>Z <span class="string">cpu9:</span><span class="number">34803</span>)<span class="string">FSS:</span> <span class="number">5327</span>: No FS driver claimed device <span class="string">'10a80a6-819390-svmmirror'</span>: No filesystem on the device</div><div class="line">Line <span class="number">5021</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">27</span>:<span class="number">20.668</span>Z <span class="string">cpu16:</span><span class="number">808643</span>)<span class="string">SVM:</span> <span class="number">2428</span>: SVM Mirrored mode IO stats <span class="keyword">for</span> <span class="string">device:</span> <span class="number">10</span>a80a6<span class="number">-819390</span>-svmmirror</div><div class="line">Line <span class="number">5024</span>: <span class="number">2016</span><span class="number">-05</span><span class="number">-19</span><span class="string">T13:</span><span class="number">27</span>:<span class="number">20.668</span>Z <span class="string">cpu16:</span><span class="number">808643</span>)<span class="string">SVM:</span> <span class="number">2450</span>: Destroyed device <span class="number">10</span>a80a6<span class="number">-819390</span>-svmmirror</div></pre></td></tr></table></figure></p>
+<p>有很多<code>10a80a6-819390-svmmirror busy</code>的打印，当时从这里能够找到一些线索，于是到查找<code>svmmirror</code>相关的资料，发现找到一些有用的资料，虽然没有从<code>svmmirror</code>中得到更多的线索，但是对于<code>ESXi</code>的<code>Storage vMotion</code>有了更深的理解。</p>
+<p><code>Svmmirror</code>是由<code>mirror driver</code>实现的，下面我就简单介绍一下<code>mirror driver</code>：</p>
+<p><code>Mirror Mode</code>是在<code>vSphere 5.0</code>合入到<code>Storage vMotion</code>的一个新特性，它能够让<code>Storage vMotion</code>更快、更高效。</p>
+<p>在<code>Storage vMotion</code>迁移虚拟机过程中会遇到一个的问题：拷贝虚拟机的虚拟磁盘时，部分数据块已经拷贝到目的磁盘，当正在运行过程中的虚拟机向已经被拷贝到目的磁盘所在的数据块中写数据，那么如何将修改后的数据块同步到目的磁盘保证数据的一致性？</p>
+<p><code>Storage vMotion</code>提出了很多办法来解决这个问题：</p>
+<ol>
+<li>快照技术</li>
+<li><code>Change Block Tracking(CBT)</code></li>
+<li><code>Mirror Mode</code><br>其中<code>Mirror Mode</code>的性能最好。其工作原理很简单，就是将I/O做下镜像。换句话说，当一个正在进行<code>Storage vMotio</code>n的虚拟机要写数据到虚拟机磁盘当中，写数据的I/O会同时向源磁盘和目的磁盘下发，只有当源磁盘和目的磁盘都写成功之后才会通知虚拟机I/O已完成。 </li>
+</ol>
+<p><code>Mirror Mode</code>对于迁移虚拟机的性能提升是非常巨大的，详情请参考这个<a href="https://www.usenix.org/legacy/events/atc11/tech/final_files/Mashtizadeh.pdf" target="_blank" rel="external">论文</a>。</p>
+<p>了解完了<code>Mirror Mode</code>，那么我们看看对<code>Storage vMotion</code>迁移流程的影响：</p>
+<ol>
+<li>由<code>VPXA</code>将虚拟机的工作目录拷贝到目的磁盘上；</li>
+<li>使用拷贝过去的文件在目标磁盘上创建并启动“影子”虚拟机，这个虚拟机会处于空闲状态并等待拷贝数据完成。为防止虚拟机的工作目录被转移，虚拟机被创建为失效保护模式；</li>
+<li><code>Storage vMotion</code>启动<code>Mirror Driver</code>将已拷贝到目的磁盘的数据镜像写入源和目标磁盘；</li>
+<li>经过一轮拷贝，使用镜像<code>I/O</code>就可以将虚拟机的磁盘文档完整的拷贝到目的磁盘上。</li>
+<li><code>Storage vMotion</code>调用虚拟机的快速挂起和恢复（类似于<code>vMotion</code>），将正在运行的虚拟机转移到空闲影子虚拟机。</li>
+<li>在快速挂起和恢复完成后，旧的工作目录和虚拟磁盘文件将从源磁盘中删除。</li>
+</ol>
+<p>然后我通过测试<code>Storage vMotion</code>过程中实际使用了<code>Mirror Mode</code>。打开虚拟机的日志文件，找打下面的打印：<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="number">2016</span><span class="bullet">-05</span><span class="bullet">-19</span><span class="attr">T12:59:29.721Z|</span> <span class="string">vcpu-0|</span> <span class="attr">I120:</span> <span class="string">DISKLIB-LIB_MISC</span>   <span class="string">:</span> <span class="string">Opening</span> <span class="string">mirror</span> <span class="string">node</span> <span class="string">/vmfs/devices/svm/10a80a6-819390-svmmirror</span></div><div class="line"><span class="number">2016</span><span class="bullet">-05</span><span class="bullet">-19</span><span class="attr">T12:59:29.721Z|</span> <span class="string">vcpu-0|</span> <span class="attr">I120:</span> <span class="string">Creating</span> <span class="string">virtual</span> <span class="string">dev</span> <span class="string">for</span> <span class="attr">scsi0:0</span></div><div class="line"><span class="number">2016</span><span class="bullet">-05</span><span class="bullet">-19</span><span class="attr">T12:59:29.721Z|</span> <span class="string">vcpu-0|</span> <span class="attr">I120:</span> <span class="attr">DumpDiskInfo:</span> <span class="attr">scsi0:0</span> <span class="string">createType=11,</span> <span class="string">capacity</span> <span class="string">=</span> <span class="number">33554432</span><span class="string">,</span> <span class="string">numLinks</span> <span class="string">=</span> <span class="number">1</span><span class="string">,</span> <span class="string">allocationType</span> <span class="string">=</span> <span class="number">1</span></div><div class="line"><span class="number">2016</span><span class="bullet">-05</span><span class="bullet">-19</span><span class="attr">T12:59:29.721Z|</span> <span class="string">vcpu-0|</span> <span class="attr">I120:</span> <span class="attr">SCSIDiskESXPopulateVDevDesc:</span> <span class="string">Using</span> <span class="string">FS</span> <span class="string">backend</span></div><div class="line"><span class="number">2016</span><span class="bullet">-05</span><span class="bullet">-19</span><span class="attr">T12:59:29.721Z|</span> <span class="string">vcpu-0|</span> <span class="attr">I120:</span> <span class="attr">DISKUTIL:</span> <span class="attr">scsi0:0</span> <span class="string">:</span> <span class="string">geometry=2088/255/63</span></div><div class="line"><span class="number">2016</span><span class="bullet">-05</span><span class="bullet">-19</span><span class="attr">T12:59:29.723Z|</span> <span class="string">vcpu-0|</span> <span class="attr">I120:</span> <span class="string">VMXNET3</span> <span class="attr">user:</span> <span class="string">Ethernet1</span> <span class="string">Driver</span> <span class="attr">Info:</span> <span class="string">version</span> <span class="string">=</span> <span class="number">16778496</span> <span class="string">gosBits</span> <span class="string">=</span> <span class="number">2</span> <span class="string">gosType</span> <span class="string">=</span> <span class="number">1</span><span class="string">,</span> <span class="string">gosVer</span> <span class="string">=</span> <span class="number">0</span><span class="string">,</span> <span class="string">gosMisc</span> <span class="string">=</span> <span class="number">0</span></div><div class="line"><span class="number">2016</span><span class="bullet">-05</span><span class="bullet">-19</span><span class="attr">T12:59:29.723Z|</span> <span class="string">Worker#0|</span> <span class="attr">I120:</span> <span class="attr">SVMotion:</span> <span class="string">Enter</span> <span class="string">Phase</span> <span class="number">8</span></div><div class="line"><span class="number">2016</span><span class="bullet">-05</span><span class="bullet">-19</span><span class="attr">T12:59:30.012Z|</span> <span class="string">Worker#0|</span> <span class="attr">I120:</span> <span class="string">Disk/File</span> <span class="string">copy</span> <span class="string">started</span> <span class="string">for</span> <span class="string">/vmfs/volumes/5739734e-f309ac87-4491-f8bc123449c2/W1_2/W1_2.vmdk.</span></div><div class="line"><span class="number">2016</span><span class="bullet">-05</span><span class="bullet">-19</span><span class="attr">T12:59:35.681Z|</span> <span class="string">vcpu-0|</span> <span class="attr">I120:</span> <span class="attr">HBACommon:</span> <span class="string">First</span> <span class="string">write</span> <span class="string">on</span> <span class="attr">scsi0:0.fileName='/vmfs/volumes/5739734e-f309ac87-4491-f8bc123449c2/W1_2/W1_2.vmdk'</span></div><div class="line"><span class="number">2016</span><span class="bullet">-05</span><span class="bullet">-19</span><span class="attr">T12:59:35.681Z|</span> <span class="string">vcpu-0|</span> <span class="attr">I120:</span> <span class="attr">DDB:</span> <span class="string">"longContentID"</span> <span class="string">=</span> <span class="string">"40d56f2945fea90820e1995ff9f13b36"</span> <span class="string">(was</span> <span class="string">"31f679521f5e9755ae9f840e8c55ccfc"</span><span class="string">)</span></div></pre></td></tr></table></figure></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持楼兰故居</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.jpg" alt="">
+          </li>
+        
+          <li class="item">
+            <img src="/images/qr-alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'https://cosysn.github.io/2017/01/14/storage-vmotion-and-the-mirror-driver/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

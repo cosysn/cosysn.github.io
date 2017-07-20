@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>readfree.me自动签到脚本 | 楼兰故居</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="cosysn,c,python,shell,server,storage,ESXi,Linux,Windows,楼兰故居,存储,服务器" />
+  
+
+  <meta name="description" content="readfree.me自动签到脚本0. 前言我们要知道readfree.me网站的签到规则，查询readfree的论坛找到自动签到获取积分的方法，就是在每天第一次访问网站时，会跳转到亚马逊，此时就完成了签到。 该签到规则是来自于【重要】readfree额度规则变更通知 ，其具体的规则如下：   Free用户通过每日签到，随机获取1-3个额度，且可累计。 对Free用户的额度规则也适用于Pro用户，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="readfree.me自动签到脚本">
+<meta property="og:url" content="https://cosysn.github.io/2017/07/17/readfree-auto-sig-implement/index.html">
+<meta property="og:site_name" content="楼兰故居">
+<meta property="og:description" content="readfree.me自动签到脚本0. 前言我们要知道readfree.me网站的签到规则，查询readfree的论坛找到自动签到获取积分的方法，就是在每天第一次访问网站时，会跳转到亚马逊，此时就完成了签到。 该签到规则是来自于【重要】readfree额度规则变更通知 ，其具体的规则如下：   Free用户通过每日签到，随机获取1-3个额度，且可累计。 对Free用户的额度规则也适用于Pro用户，">
+<meta property="og:image" content="https://cosysn.github.io/2017/07/17/readfree-auto-sig-implement/readfree_request_headers_cookie.png">
+<meta property="og:image" content="https://cosysn.github.io/2017/07/17/readfree-auto-sig-implement/cookie_table.png">
+<meta property="og:image" content="https://cosysn.github.io/2017/07/17/readfree-auto-sig-implement/request_header.png">
+<meta property="og:image" content="https://cosysn.github.io/2017/07/17/readfree-auto-sig-implement/readfree_auto_sig_test_result.png">
+<meta property="og:updated_time" content="2017-07-20T00:50:31.134Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="readfree.me自动签到脚本">
+<meta name="twitter:description" content="readfree.me自动签到脚本0. 前言我们要知道readfree.me网站的签到规则，查询readfree的论坛找到自动签到获取积分的方法，就是在每天第一次访问网站时，会跳转到亚马逊，此时就完成了签到。 该签到规则是来自于【重要】readfree额度规则变更通知 ，其具体的规则如下：   Free用户通过每日签到，随机获取1-3个额度，且可累计。 对Free用户的额度规则也适用于Pro用户，">
+<meta name="twitter:image" content="https://cosysn.github.io/2017/07/17/readfree-auto-sig-implement/readfree_request_headers_cookie.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=d671a41f" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#readfree-me自动签到脚本"><span class="toc-text">readfree.me自动签到脚本</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-前言"><span class="toc-text">0. 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-自动登录实现分析"><span class="toc-text">1. 自动登录实现分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-代码实现"><span class="toc-text">2. 代码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-测试结果"><span class="toc-text">3. 测试结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-参考资料"><span class="toc-text">4. 参考资料</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-readfree-auto-sig-implement" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">readfree.me自动签到脚本</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.07.17</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>CosySN</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="https://cosysn.github.io//2017/07/17/readfree-auto-sig-implement/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="readfree-me自动签到脚本"><a href="#readfree-me自动签到脚本" class="headerlink" title="readfree.me自动签到脚本"></a>readfree.me自动签到脚本</h1><h2 id="0-前言"><a href="#0-前言" class="headerlink" title="0. 前言"></a>0. 前言</h2><p>我们要知道readfree.me网站的签到规则，查询readfree的论坛找到自动签到获取积分的方法，就是在每天第一次访问网站时，会跳转到亚马逊，此时就完成了签到。</p>
+<p>该签到规则是来自于<a href="http://forum.readfree.me/t/readfree/302" target="_blank" rel="external">【重要】readfree额度规则变更通知</a> ，其具体的规则如下：</p>
+<blockquote>
+<ul>
+<li>Free用户通过每日签到，随机获取1-3个额度，且可累计。</li>
+<li>对Free用户的额度规则也适用于Pro用户，不过Pro用户的签到是在后台自动完成，无需跳转到亚马逊。</li>
+</ul>
+<ul>
+<li>签到是自动的，在你每天第一次访问网站时，会跳转到亚马逊，此时就完成了签到，你自己不需要做任何操作。</li>
+</ul>
+</blockquote>
+<p>因此只要能够实现自动登录功能，然后每天自动登录一次，就可以实现自动签到功能。</p>
+<h2 id="1-自动登录实现分析"><a href="#1-自动登录实现分析" class="headerlink" title="1. 自动登录实现分析"></a>1. 自动登录实现分析</h2><p>首先想到的是使用post模拟登录网站的过程，以实现自动签到的功能。</p>
+<p>直接查看登录页面，获取登录表单的代码，其代码如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">""</span> <span class="attr">id</span>=<span class="string">"id_signin_form"</span> <span class="attr">class</span>=<span class="string">"form"</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"csrfmiddlewaretoken"</span>  <span class="attr">value</span>=<span class="string">"Mjh1RrCC6VJzOdIbOfD4f99H5YEas287oltY0ve4H7BtqiqzRtMcMUpRkai4g9O3"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">"id_email"</span>&gt;</span>邮箱:<span class="tag">&lt;/<span class="name">label</span>&gt;</span></div><div class="line">  	<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"email"</span> <span class="attr">name</span>=<span class="string">"email"</span> <span class="attr">maxlength</span>=<span class="string">"50"</span> <span class="attr">required</span>=<span class="string">""</span> <span class="attr">id</span>=<span class="string">"id_email"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">"id_password"</span>&gt;</span>密码:<span class="tag">&lt;/<span class="name">label</span>&gt;</span></div><div class="line">  	<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"password"</span> <span class="attr">name</span>=<span class="string">"password"</span> <span class="attr">required</span>=<span class="string">""</span> <span class="attr">id</span>=<span class="string">"id_password"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">"id_captcha_1"</span>&gt;</span>认证码:<span class="tag">&lt;/<span class="name">label</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"/captcha/image/1c84bab76745e92b7b856d05698f781bc5c8aa54/"</span> <span class="attr">alt</span>=<span class="string">"captcha"</span> <span class="attr">class</span>=<span class="string">"captcha"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">"id_captcha_0"</span> <span class="attr">name</span>=<span class="string">"captcha_0"</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">value</span>=<span class="string">"1c84bab76745e92b7b856d05698f781bc5c8aa54"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">input</span> <span class="attr">autocapitalize</span>=<span class="string">"off"</span> <span class="attr">autocomplete</span>=<span class="string">"off"</span> <span class="attr">autocorrect</span>=<span class="string">"off"</span> <span class="attr">spellcheck</span>=<span class="string">"false"</span> <span class="attr">id</span>=<span class="string">"id_captcha_1"</span> <span class="attr">name</span>=<span class="string">"captcha_1"</span> <span class="attr">type</span>=<span class="string">"text"</span>&gt;</span></div><div class="line">&nbsp</div><div class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"form-actions"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">class</span>=<span class="string">"btn btn-primary btn-large"</span>&gt;</span><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"icon-ok icon-white"</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span>登录<span class="tag">&lt;/<span class="name">button</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>从上述表单中可以看到登录readfree会提交如下数据：</p>
+<ul>
+<li>邮箱</li>
+<li>密码</li>
+<li>csrf验证</li>
+<li>验证码</li>
+</ul>
+<p>其中邮箱、密码和csrf验证都比较好获取，因为在网页中可以直接获取到值，主要困难的是如何获取到验证码的值。</p>
+<p>通过查询资料，发现还有一种更加简单的方法，直接使用登录后的cookie访问网站，可以绕过验证码。</p>
+<p>使用chrome抓取登录时的http请求，在登录成功的页面上找到Request Headers，其中Cookie字段的值就是登录时使用的Cookie值:</p>
+<p><img src="/2017/07/17/readfree-auto-sig-implement/readfree_request_headers_cookie.png" alt="readfree_request_headers_cookie"></p>
+<p>分析一下Cookie的值其结果如下：</p>
+<p><img src="/2017/07/17/readfree-auto-sig-implement/cookie_table.png" alt="cookie_table"></p>
+<p>从上表可以看到，其总共包含6个字段，其中sessionid应该是表示用户登录的唯一标识。获取到了cookie的值后，就可以使用该cookie进行登录了。</p>
+<p>Cookie的过期时间，通过抓取到的报文，可以获得cookie是什么时候能会过期。expires 代表 cookie 过期时间，这个属性有些过时。Max-Age 作为替代，代表cookie的生存期，以秒为单位。</p>
+<p><img src="/2017/07/17/readfree-auto-sig-implement/request_header.png" alt="request_header"></p>
+<p>可以看到Cookie的超期时间是1年，那么我们就可以安心的使用1年自动登录的脚本，而不用频繁的更换cookie。</p>
+<h2 id="2-代码实现"><a href="#2-代码实现" class="headerlink" title="2. 代码实现"></a>2. 代码实现</h2><p>通过python的requests发送登录请求，其代码实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">import</span> logging</div><div class="line">    </div><div class="line">url=<span class="string">'http://readfree.me/accounts/checkin'</span></div><div class="line">cookie_str=<span class="string">''</span></div><div class="line">    </div><div class="line">logging.basicConfig(level=logging.INFO,</div><div class="line">                    filename=<span class="string">'/var/log/readfree_auto_sig.log'</span>,</div><div class="line">                    filemode=<span class="string">'a'</span>,</div><div class="line">                    format=<span class="string">'%(asctime)s - [line:%(lineno)d] - %(levelname)s: %(message)s'</span>)</div><div class="line">    </div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    </div><div class="line">    cookies=&#123;&#125;</div><div class="line">    <span class="keyword">for</span> ck <span class="keyword">in</span> cookie_str.split(<span class="string">';'</span>):</div><div class="line">        name,value=ck.strip().split(<span class="string">'='</span>,<span class="number">1</span>)</div><div class="line">        cookies[name]=value</div><div class="line">    </div><div class="line">    logging.info(<span class="string">'start to sign ...'</span>)</div><div class="line">    ret=requests.get(url, cookies=cookies)</div><div class="line">    logging.info(<span class="string">'sign %s'</span>%ret)</div></pre></td></tr></table></figure>
+<h2 id="3-测试结果"><a href="#3-测试结果" class="headerlink" title="3. 测试结果"></a>3. 测试结果</h2><p>使用Crontab设置定时任务，每天早上2点自动登录readfree.me网站，实现自动签到功能。</p>
+<p>下面是3天的测试结果：</p>
+<p><img src="/2017/07/17/readfree-auto-sig-implement/readfree_auto_sig_test_result.png" alt="测试结果"></p>
+<p>执行readfree.py打印的日志如下：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">[root@iZuf66fsxeqvr0ak92q63iZ ~]# <span class="keyword">cat</span> /var/<span class="built_in">log</span>/readfree_auto_sig.<span class="built_in">log</span> </div><div class="line"><span class="number">2017</span>-<span class="number">07</span>-<span class="number">13</span> <span class="number">01</span>:<span class="number">20</span>:<span class="number">25</span>,<span class="number">415</span> - [<span class="built_in">line</span>:<span class="number">19</span>] - INFO: start <span class="keyword">to</span> <span class="keyword">sign</span> ...</div><div class="line"><span class="number">2017</span>-<span class="number">07</span>-<span class="number">13</span> <span class="number">01</span>:<span class="number">20</span>:<span class="number">26</span>,<span class="number">286</span> - [<span class="built_in">line</span>:<span class="number">21</span>] - INFO: <span class="keyword">sign</span> &lt;Response [<span class="number">200</span>]&gt;</div><div class="line"><span class="number">2017</span>-<span class="number">07</span>-<span class="number">13</span> <span class="number">01</span>:<span class="number">23</span>:<span class="number">01</span>,<span class="number">341</span> - [<span class="built_in">line</span>:<span class="number">19</span>] - INFO: start <span class="keyword">to</span> <span class="keyword">sign</span> ...</div><div class="line"><span class="number">2017</span>-<span class="number">07</span>-<span class="number">13</span> <span class="number">01</span>:<span class="number">23</span>:<span class="number">01</span>,<span class="number">964</span> - [<span class="built_in">line</span>:<span class="number">21</span>] - INFO: <span class="keyword">sign</span> &lt;Response [<span class="number">200</span>]&gt;</div><div class="line"><span class="number">2017</span>-<span class="number">07</span>-<span class="number">13</span> <span class="number">01</span>:<span class="number">24</span>:<span class="number">02</span>,<span class="number">135</span> - [<span class="built_in">line</span>:<span class="number">19</span>] - INFO: start <span class="keyword">to</span> <span class="keyword">sign</span> ...</div><div class="line"><span class="number">2017</span>-<span class="number">07</span>-<span class="number">13</span> <span class="number">01</span>:<span class="number">24</span>:<span class="number">02</span>,<span class="number">798</span> - [<span class="built_in">line</span>:<span class="number">21</span>] - INFO: <span class="keyword">sign</span> &lt;Response [<span class="number">200</span>]&gt;</div><div class="line"><span class="number">2017</span>-<span class="number">07</span>-<span class="number">13</span> <span class="number">02</span>:<span class="number">00</span>:<span class="number">02</span>,<span class="number">035</span> - [<span class="built_in">line</span>:<span class="number">19</span>] - INFO: start <span class="keyword">to</span> <span class="keyword">sign</span> ...</div><div class="line"><span class="number">2017</span>-<span class="number">07</span>-<span class="number">13</span> <span class="number">02</span>:<span class="number">00</span>:<span class="number">02</span>,<span class="number">731</span> - [<span class="built_in">line</span>:<span class="number">21</span>] - INFO: <span class="keyword">sign</span> &lt;Response [<span class="number">200</span>]&gt;</div><div class="line"><span class="number">2017</span>-<span class="number">07</span>-<span class="number">14</span> <span class="number">02</span>:<span class="number">00</span>:<span class="number">01</span>,<span class="number">824</span> - [<span class="built_in">line</span>:<span class="number">19</span>] - INFO: start <span class="keyword">to</span> <span class="keyword">sign</span> ...</div><div class="line"><span class="number">2017</span>-<span class="number">07</span>-<span class="number">14</span> <span class="number">02</span>:<span class="number">00</span>:<span class="number">02</span>,<span class="number">806</span> - [<span class="built_in">line</span>:<span class="number">21</span>] - INFO: <span class="keyword">sign</span> &lt;Response [<span class="number">200</span>]&gt;</div><div class="line"><span class="number">2017</span>-<span class="number">07</span>-<span class="number">15</span> <span class="number">02</span>:<span class="number">00</span>:<span class="number">02</span>,<span class="number">140</span> - [<span class="built_in">line</span>:<span class="number">19</span>] - INFO: start <span class="keyword">to</span> <span class="keyword">sign</span> ...</div><div class="line"><span class="number">2017</span>-<span class="number">07</span>-<span class="number">15</span> <span class="number">02</span>:<span class="number">00</span>:<span class="number">03</span>,<span class="number">277</span> - [<span class="built_in">line</span>:<span class="number">21</span>] - INFO: <span class="keyword">sign</span> &lt;Response [<span class="number">200</span>]&gt;</div><div class="line"><span class="number">2017</span>-<span class="number">07</span>-<span class="number">16</span> <span class="number">02</span>:<span class="number">00</span>:<span class="number">02</span>,<span class="number">751</span> - [<span class="built_in">line</span>:<span class="number">19</span>] - INFO: start <span class="keyword">to</span> <span class="keyword">sign</span> ...</div><div class="line"><span class="number">2017</span>-<span class="number">07</span>-<span class="number">16</span> <span class="number">02</span>:<span class="number">00</span>:<span class="number">03</span>,<span class="number">695</span> - [<span class="built_in">line</span>:<span class="number">21</span>] - INFO: <span class="keyword">sign</span> &lt;Response [<span class="number">200</span>]&gt;</div><div class="line"><span class="number">2017</span>-<span class="number">07</span>-<span class="number">17</span> <span class="number">02</span>:<span class="number">00</span>:<span class="number">02</span>,<span class="number">942</span> - [<span class="built_in">line</span>:<span class="number">19</span>] - INFO: start <span class="keyword">to</span> <span class="keyword">sign</span> ...</div><div class="line"><span class="number">2017</span>-<span class="number">07</span>-<span class="number">17</span> <span class="number">02</span>:<span class="number">00</span>:<span class="number">03</span>,<span class="number">738</span> - [<span class="built_in">line</span>:<span class="number">21</span>] - INFO: <span class="keyword">sign</span> &lt;Response [<span class="number">200</span>]&gt;</div></pre></td></tr></table></figure>
+<p>后续会跟踪一段时间，看看是否还存在其他的问题。</p>
+<h2 id="4-参考资料"><a href="#4-参考资料" class="headerlink" title="4. 参考资料"></a>4. 参考资料</h2><ol>
+<li><a href="http://www.cnblogs.com/yoyoketang/p/6838596.html" target="_blank" rel="external">python接口自动化4-绕过验证码登录（cookie）</a></li>
+<li><a href="http://blog.csdn.net/alpha5/article/details/24964009" target="_blank" rel="external">python requests的安装与简单运用</a></li>
+<li><a href="http://blog.csdn.net/winterto1990/article/details/51213029" target="_blank" rel="external">python的requests在网络请求中添加cookies参数</a></li>
+<li><a href="https://segmentfault.com/q/1010000002902690" target="_blank" rel="external">chrome浏览器怎么查看传入后台的POST的值？</a></li>
+</ol>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持楼兰故居</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.jpg" alt="">
+          </li>
+        
+          <li class="item">
+            <img src="/images/qr-alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'https://cosysn.github.io/2017/07/17/readfree-auto-sig-implement/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

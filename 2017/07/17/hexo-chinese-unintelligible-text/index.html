@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo自动生成的RSS中出现中文乱码 | 楼兰故居</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="cosysn,c,python,shell,server,storage,ESXi,Linux,Windows,楼兰故居,存储,服务器" />
+  
+
+  <meta name="description" content="Hexo自动生成的RSS中出现中文乱码0. 问题描述添加了hexo-generator-feed插件后自动生成RSS，但是在生成的atom.xml文件中如果存在中文的话，就会出现乱码，导致订阅RSS功能会出现异常。下面截取部分出现问题的atom.xml：  这个问题比较严重，需要解决。 1. 问题分析 首先在hexo-generator-feed中添加调试信息，然后复现该问题，确认是否是hexo-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo自动生成的RSS中出现中文乱码">
+<meta property="og:url" content="https://cosysn.github.io/2017/07/17/hexo-chinese-unintelligible-text/index.html">
+<meta property="og:site_name" content="楼兰故居">
+<meta property="og:description" content="Hexo自动生成的RSS中出现中文乱码0. 问题描述添加了hexo-generator-feed插件后自动生成RSS，但是在生成的atom.xml文件中如果存在中文的话，就会出现乱码，导致订阅RSS功能会出现异常。下面截取部分出现问题的atom.xml：  这个问题比较严重，需要解决。 1. 问题分析 首先在hexo-generator-feed中添加调试信息，然后复现该问题，确认是否是hexo-">
+<meta property="og:image" content="https://cosysn.github.io/2017/07/17/hexo-chinese-unintelligible-text/atom_chinese_unicode_num.png">
+<meta property="og:image" content="https://cosysn.github.io/2017/07/17/hexo-chinese-unintelligible-text/atom_debug_code.png">
+<meta property="og:image" content="https://cosysn.github.io/2017/07/17/hexo-chinese-unintelligible-text/atom_xxx.png">
+<meta property="og:image" content="https://cosysn.github.io/2017/07/17/hexo-chinese-unintelligible-text/generator_html.png">
+<meta property="og:image" content="https://cosysn.github.io/2017/07/17/hexo-chinese-unintelligible-text/generator_cor_html.png">
+<meta property="og:updated_time" content="2017-07-20T00:47:41.825Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo自动生成的RSS中出现中文乱码">
+<meta name="twitter:description" content="Hexo自动生成的RSS中出现中文乱码0. 问题描述添加了hexo-generator-feed插件后自动生成RSS，但是在生成的atom.xml文件中如果存在中文的话，就会出现乱码，导致订阅RSS功能会出现异常。下面截取部分出现问题的atom.xml：  这个问题比较严重，需要解决。 1. 问题分析 首先在hexo-generator-feed中添加调试信息，然后复现该问题，确认是否是hexo-">
+<meta name="twitter:image" content="https://cosysn.github.io/2017/07/17/hexo-chinese-unintelligible-text/atom_chinese_unicode_num.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=d671a41f" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hexo自动生成的RSS中出现中文乱码"><span class="toc-text">Hexo自动生成的RSS中出现中文乱码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-问题描述"><span class="toc-text">0. 问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-问题分析"><span class="toc-text">1. 问题分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-问题解决"><span class="toc-text">2. 问题解决</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-经验总结"><span class="toc-text">3. 经验总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-参考文献"><span class="toc-text">4. 参考文献</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-hexo-chinese-unintelligible-text" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Hexo自动生成的RSS中出现中文乱码</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.07.17</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>CosySN</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="https://cosysn.github.io//2017/07/17/hexo-chinese-unintelligible-text/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="Hexo自动生成的RSS中出现中文乱码"><a href="#Hexo自动生成的RSS中出现中文乱码" class="headerlink" title="Hexo自动生成的RSS中出现中文乱码"></a>Hexo自动生成的RSS中出现中文乱码</h1><h2 id="0-问题描述"><a href="#0-问题描述" class="headerlink" title="0. 问题描述"></a>0. 问题描述</h2><p>添加了hexo-generator-feed插件后自动生成RSS，但是在生成的atom.xml文件中如果存在中文的话，就会出现乱码，导致订阅RSS功能会出现异常。下面截取部分出现问题的atom.xml：</p>
+<p><img src="/2017/07/17/hexo-chinese-unintelligible-text/atom_chinese_unicode_num.png" alt=""></p>
+<p>这个问题比较严重，需要解决。</p>
+<h2 id="1-问题分析"><a href="#1-问题分析" class="headerlink" title="1. 问题分析"></a>1. 问题分析</h2><ol>
+<li><p>首先在hexo-generator-feed中添加调试信息，然后复现该问题，确认是否是hexo-genrator-feed引起的异常。</p>
+<p><img src="/2017/07/17/hexo-chinese-unintelligible-text/atom_debug_code.png" alt=""></p>
+</li>
+<li><p>复现后，查看打印的调试信息</p>
+<p><img src="/2017/07/17/hexo-chinese-unintelligible-text/atom_xxx.png" alt=""></p>
+<p>可以看到很多乱码，而且发现是在hexo-generator-feed这个插件在处理之前就是乱码了，因此这些乱码不是这个插件处理有问题导致的。</p>
+<p><a href="https://hexo.io/api/locals.html" target="_blank" rel="external">Local Variables</a></p>
+</li>
+<li><p>那么排除了这个插件的嫌疑点之后，那谁才是导致出现这个问题的罪魁祸首呢。</p>
+<p>我开始怀疑，是不是hexo在处理markdown生成相应的html文档时存在问题，导致生成的html文档就存在乱码。</p>
+<p>我找到了生成的html文档，发现生成的html文档中确实存在乱码，下面截取一部分片段：</p>
+<p><img src="/2017/07/17/hexo-chinese-unintelligible-text/generator_html.png" alt=""></p>
+<p>那么在这里就可以确定是hexo生成html文档时出现问题，导致生成的html文档中存在乱码。</p>
+</li>
+<li><p>但是hexo生成html时，调用了很多插件，很难确定导致问题的原因。那么首先到网上去查询一下是否存在类似的问题，查询后发现有很多类似的问题，大多都跟文档的编码设置不正确有关。</p>
+<p><a href="http://www.cognize.me/2014/10/31/hexoluanma/" target="_blank" rel="external">解决hexo博客的乱码问题</a></p>
+<p>但是我将所有的博客的编码都设置为utf-8，尝试多次之后都无法解决这个问题，我开始怀疑可能跟文件的编码没有关系。</p>
+</li>
+<li><p>后面的hexo的问题库中找到了问题的原因，是因为<a href="https://github.com/cheeriojs/cheerio" target="_blank" rel="external">cheerio</a>库存在编码处理的问题，而使用了hexo-asset-image这个插件，插件中使用了cheerio导致的。</p>
+<ul>
+<li><a href="https://github.com/hexojs/hexo/issues/657" target="_blank" rel="external">網頁能正常顯示中文，但查看HTML源代碼卻出現亂碼……</a></li>
+<li><a href="https://github.com/PaicHyperionDev/hexo-generator-search/issues/13" target="_blank" rel="external">中文转码问题 #13</a></li>
+<li><a href="https://github.com/bubkoo/hexo-toc/pull/15" target="_blank" rel="external">let cheerio do not decode entities #15</a></li>
+<li><a href="https://github.com/cheeriojs/cheerio/issues/565" target="_blank" rel="external">.html() method returns html with UNICODE when Chinese words are passed </a></li>
+<li><a href="https://github.com/CodeFalling/hexo-asset-image/issues/12" target="_blank" rel="external">中文编码问题 #12</a></li>
+</ul>
+<p>上面这些链接都是有这个原因导致的问题。</p>
+</li>
+<li><p>分析到这里，问题的原因已经清楚了，下面将讲述如何解决这个问题。</p>
+</li>
+</ol>
+<h2 id="2-问题解决"><a href="#2-问题解决" class="headerlink" title="2. 问题解决"></a>2. 问题解决</h2><p>查询hexo-asset-image的问题单库，发现该问题已经在 <a href="https://github.com/CodeFalling/hexo-asset-image/issues/12" target="_blank" rel="external">中文编码问题 #12</a> 中解决了，其解决的代码如下所示：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> $ = cheerio.load(data[key], &#123;</div><div class="line">       <span class="attr">ignoreWhitespace</span>: <span class="literal">false</span>,</div><div class="line">       <span class="attr">xmlMode</span>: <span class="literal">false</span>,</div><div class="line">       <span class="attr">lowerCaseTags</span>: <span class="literal">false</span>,</div><div class="line">       <span class="attr">decodeEntities</span>: <span class="literal">false</span> <span class="comment">// 解决问题的关键</span></div><div class="line">     &#125;);</div></pre></td></tr></table></figure>
+<p>既然hexo-assert-image最新的版本已经解决了这个问题，我就想直接升级hexo-assert-image来解决这个问题。</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm update hexo-<span class="keyword">assert</span>-<span class="built_in">image</span></div></pre></td></tr></table></figure>
+<p>使用上述命令升级hexo-assert-image后发现问题没有解决，应该是作者在修改了这个问题后，没有及时将修改发布到npm当中，导致使用npm无法更新到最新版本。</p>
+<p>使用npm无法更新hexo-assert-image库，后面找到npm可以直接使用github安装库。其升级步骤如下：</p>
+<ol>
+<li><p>卸载老版本的hexo-assert-image函数库</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm uninstall hexo-<span class="keyword">assert</span>-<span class="built_in">image</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>npm直接安装github上的hexo-assert-image函数库</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">npm</span> install git+ssh:<span class="regexp">//gi</span>t@github.com:CodeFalling/hexo-asset-image.git</div></pre></td></tr></table></figure>
+</li>
+<li><p>hexo重新生成静态博客</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">hexo clean</span></div><div class="line">hexo g</div></pre></td></tr></table></figure>
+</li>
+<li><p>检查重新生成后的网页，发现问题已经解决，没有发现乱码</p>
+<p><img src="/2017/07/17/hexo-chinese-unintelligible-text/generator_cor_html.png" alt=""></p>
+</li>
+</ol>
+<h2 id="3-经验总结"><a href="#3-经验总结" class="headerlink" title="3. 经验总结"></a>3. 经验总结</h2><ol>
+<li>合理利用hexo的问题库，如果能够找到别人已经解决的问题，这样自己就可以少走一些弯路。</li>
+<li>大胆假设，小心求证。</li>
+</ol>
+<h2 id="4-参考文献"><a href="#4-参考文献" class="headerlink" title="4. 参考文献"></a>4. 参考文献</h2><ol>
+<li><a href="http://www.cognize.me/2014/10/31/hexoluanma/" target="_blank" rel="external">解决hexo博客的乱码问题</a></li>
+<li><a href="https://github.com/hexojs/hexo/issues/657" target="_blank" rel="external">網頁能正常顯示中文，但查看HTML源代碼卻出現亂碼……</a></li>
+<li><a href="https://github.com/PaicHyperionDev/hexo-generator-search/issues/13" target="_blank" rel="external">中文转码问题 #13</a></li>
+<li><a href="https://github.com/bubkoo/hexo-toc/pull/15" target="_blank" rel="external">let cheerio do not decode entities #15</a></li>
+<li><a href="https://github.com/cheeriojs/cheerio/issues/565" target="_blank" rel="external">.html() method returns html with UNICODE when Chinese words are passed </a></li>
+<li><a href="https://github.com/CodeFalling/hexo-asset-image/issues/12" target="_blank" rel="external">中文编码问题 #12</a></li>
+<li><a href="http://www.cnblogs.com/so-letitgo/p/5833595.html" target="_blank" rel="external">npm 安装远程包（github的）</a></li>
+<li><a href="https://segmentfault.com/q/1010000006244639" target="_blank" rel="external">npm如何安装github里的指定分支</a></li>
+<li><a href="https://github.com/CodeFalling/hexo-asset-image" target="_blank" rel="external">CodeFalling/hexo-asset-image</a></li>
+<li><a href="http://blog.csdn.net/melordljm/article/details/51985157" target="_blank" rel="external">Hexo高级教程之插件开发</a></li>
+</ol>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持楼兰故居</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.jpg" alt="">
+          </li>
+        
+          <li class="item">
+            <img src="/images/qr-alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'https://cosysn.github.io/2017/07/17/hexo-chinese-unintelligible-text/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

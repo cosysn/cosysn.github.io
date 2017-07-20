@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo代码无法显示空行，并且行数和代码不对齐 | 楼兰故居</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="cosysn,c,python,shell,server,storage,ESXi,Linux,Windows,楼兰故居,存储,服务器" />
+  
+
+  <meta name="description" content="0. 问题描述使用hexo后显示代码块存在问题，会自动删除部分空行，以及行数和代码不对齐 比如我想显示下面的代码： 123456789#include &amp;lt;stdio.h&amp;gt; int main(int argc, char *argv[])&amp;#123;	int a, b;&amp;nbsp	printf(&quot;a+b&quot;, a+b);	return 0;&amp;#125; 但是实际的显示效果如下图所示：  我">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo代码无法显示空行，并且行数和代码不对齐">
+<meta property="og:url" content="https://cosysn.github.io/2017/07/20/hexo-code-block-blank-line-incorrect/index.html">
+<meta property="og:site_name" content="楼兰故居">
+<meta property="og:description" content="0. 问题描述使用hexo后显示代码块存在问题，会自动删除部分空行，以及行数和代码不对齐 比如我想显示下面的代码： 123456789#include &amp;lt;stdio.h&amp;gt; int main(int argc, char *argv[])&amp;#123;	int a, b;&amp;nbsp	printf(&quot;a+b&quot;, a+b);	return 0;&amp;#125; 但是实际的显示效果如下图所示：  我">
+<meta property="og:image" content="https://cosysn.github.io/2017/07/20/hexo-code-block-blank-line-incorrect/code_incorrect.png">
+<meta property="og:image" content="https://cosysn.github.io/2017/07/20/hexo-code-block-blank-line-incorrect/line_blank.png">
+<meta property="og:image" content="https://cosysn.github.io/2017/07/20/hexo-code-block-blank-line-incorrect/code_correct.png">
+<meta property="og:image" content="https://cosysn.github.io/2017/07/20/hexo-code-block-blank-line-incorrect/line_blank_correct.png">
+<meta property="og:image" content="https://cosysn.github.io/2017/07/20/hexo-code-block-blank-line-incorrect/code_correct_verify.png">
+<meta property="og:image" content="https://cosysn.github.io/2017/07/20/hexo-code-block-blank-line-incorrect/line_blank_correct_verfy.png">
+<meta property="og:updated_time" content="2017-07-20T00:34:00.537Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo代码无法显示空行，并且行数和代码不对齐">
+<meta name="twitter:description" content="0. 问题描述使用hexo后显示代码块存在问题，会自动删除部分空行，以及行数和代码不对齐 比如我想显示下面的代码： 123456789#include &amp;lt;stdio.h&amp;gt; int main(int argc, char *argv[])&amp;#123;	int a, b;&amp;nbsp	printf(&quot;a+b&quot;, a+b);	return 0;&amp;#125; 但是实际的显示效果如下图所示：  我">
+<meta name="twitter:image" content="https://cosysn.github.io/2017/07/20/hexo-code-block-blank-line-incorrect/code_incorrect.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=d671a41f" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-问题描述"><span class="toc-text">0. 问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-问题分析"><span class="toc-text">1. 问题分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-解决方案"><span class="toc-text">2. 解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-问题验证"><span class="toc-text">3. 问题验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-参考文献"><span class="toc-text">4. 参考文献</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-hexo-code-block-blank-line-incorrect" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Hexo代码无法显示空行，并且行数和代码不对齐</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.07.20</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>CosySN</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="https://cosysn.github.io//2017/07/20/hexo-code-block-blank-line-incorrect/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="0-问题描述"><a href="#0-问题描述" class="headerlink" title="0. 问题描述"></a>0. 问题描述</h2><p>使用hexo后显示代码块存在问题，会自动删除部分空行，以及行数和代码不对齐</p>
+<p>比如我想显示下面的代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> a, b;</div><div class="line">&nbsp</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"a+b"</span>, a+b);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>但是实际的显示效果如下图所示：</p>
+<p><img src="/2017/07/20/hexo-code-block-blank-line-incorrect/code_incorrect.png" alt=""></p>
+<p>我们可以看到空行被删除，导致行号和代码无法对其。</p>
+<h2 id="1-问题分析"><a href="#1-问题分析" class="headerlink" title="1. 问题分析"></a>1. 问题分析</h2><ol>
+<li><p>首先看网页源码，看看对应的网页源码是否存在问题</p>
+<p>我们可以看到2和6这两个空行没有显示出来，而对应的html代码如下：</p>
+<p><img src="/2017/07/20/hexo-code-block-blank-line-incorrect/line_blank.png" alt=""></p>
+<p>上面标注的就是没有显示出来的行，可以看到虽然生成相应的div，但是其内容是空的。</p>
+<p>通过查询资料可以知道，如果div标签的内容为空的话，是无法在浏览器上显示出来的，详情见下面的链接：</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/4171286/how-to-make-a-div-with-no-content-have-a-width" target="_blank" rel="external">How to make a DIV with no content have a width?</a></li>
+<li><a href="https://stackoverflow.com/questions/2114667/html-div-element-disappears-with-no-content" target="_blank" rel="external">HTML DIV element Disappears with no content</a></li>
+<li><a href="https://stackoverflow.com/questions/6310808/div-with-background-image-and-no-content-not-displaying" target="_blank" rel="external">Div with background image and no content not displaying</a></li>
+</ul>
+</li>
+<li><p>上面知道了是因为空行生成的div的内容是空的导致浏览器无法显示出来，那么如果我们在写代码的时候，每个空行都加几个空格，保证div的内容不是空，是不是就可以将空行显示出来。</p>
+</li>
+<li><p>经过测试，发现将空行上添加多个空格后，就能将空行正常显示出来了。</p>
+<p><img src="/2017/07/20/hexo-code-block-blank-line-incorrect/code_correct.png" alt=""></p>
+<p>而且生成的html代码中空行对应的div的内容也不是空的了。</p>
+<p><img src="/2017/07/20/hexo-code-block-blank-line-incorrect/line_blank_correct.png" alt=""></p>
+<p>虽然将每个空行添加了若干了空格暂时规避了该问题，但是那是治标不治本呀，定位到这里基本可以确定是hexo在处理markdown时没有处理这种情况，导致无法正常显示空行。</p>
+<p>下面我们去研究一下，hexo在处理markdown时除了什么问题导致这个现象。</p>
+</li>
+<li><p>经过分析，发现生成代码片段的是在hexo-util/highlight.js文件中的highlightUtil函数，下面分析一下问题出现的原因：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> lines = data.value.split(<span class="string">'\n'</span>);</div><div class="line"> <span class="keyword">var</span> numbers = <span class="string">''</span>;</div><div class="line"> <span class="keyword">var</span> content = <span class="string">''</span>;</div><div class="line"> <span class="keyword">var</span> result = <span class="string">''</span>;</div><div class="line"> <span class="keyword">var</span> line;</div><div class="line">&nbsp</div><div class="line"> <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, len = lines.length; i &lt; len; i++) &#123;</div><div class="line">   line = lines[i];</div><div class="line">   <span class="keyword">if</span> (tab) line = replaceTabs(line, tab);</div><div class="line">   numbers += <span class="string">'&lt;div class="line"&gt;'</span> + (firstLine + i) + <span class="string">'&lt;/div&gt;'</span>;</div><div class="line">   content += <span class="string">'&lt;div class="line'</span>;</div><div class="line">   content += (mark.indexOf(firstLine + i) !== <span class="number">-1</span>) ? <span class="string">' marked'</span> : <span class="string">''</span>;</div><div class="line">   content += <span class="string">'"&gt;'</span> + line + <span class="string">'&lt;/div&gt;'</span>;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>其处理流程如下：</p>
+<ul>
+<li>将获得的代码片段按照’\n’分割成若干个字符串，每行对应一个字符串；</li>
+<li>遍历所有行进行处理<ul>
+<li>如果开启tab转空格选项，则调用replaceTabs将所有的tab转换为空格；</li>
+<li>生成行号对应的html片段</li>
+<li>生成代码对应的html片段</li>
+</ul>
+</li>
+</ul>
+<p>从上面的处理流程可以看出，如果是空行的话，其会生内容为空的div。</p>
+</li>
+<li><p>至此问题算是定位了。</p>
+</li>
+</ol>
+<h2 id="2-解决方案"><a href="#2-解决方案" class="headerlink" title="2. 解决方案"></a>2. 解决方案</h2><p>经过上面的分析，我们已经知道了问题出现的原因，就是因为空行生成的div的内容为空。</p>
+<p>那么我们在生成html代码时，可以判断如果是空行的话，可以在div中添加一个&amp;nbsp，保证div的内容不为空。其代码的修改如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> lines = data.value.split(<span class="string">'\n'</span>);</div><div class="line">  <span class="keyword">var</span> numbers = <span class="string">''</span>;</div><div class="line">  <span class="keyword">var</span> content = <span class="string">''</span>;</div><div class="line">  <span class="keyword">var</span> result = <span class="string">''</span>;</div><div class="line">  <span class="keyword">var</span> line;</div><div class="line">&nbsp</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, len = lines.length; i &lt; len; i++) &#123;</div><div class="line">    line = lines[i];</div><div class="line">    <span class="keyword">if</span> (tab) line = replaceTabs(line, tab);</div><div class="line">    numbers += <span class="string">'&lt;div class="line"&gt;'</span> + (firstLine + i) + <span class="string">'&lt;/div&gt;'</span>;</div><div class="line">    line = (line.length != <span class="number">0</span>) ? line : <span class="string">'&amp;nbsp'</span>; <span class="comment">// 如果是空行的话，在div的内容添加个&amp;nbsp</span></div><div class="line">    content += <span class="string">'&lt;div class="line'</span>;</div><div class="line">    content += (mark.indexOf(firstLine + i) !== <span class="number">-1</span>) ? <span class="string">' marked'</span> : <span class="string">''</span>;</div><div class="line">    content += <span class="string">'"&gt;'</span> + line + <span class="string">'&lt;/div&gt;'</span>;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h2 id="3-问题验证"><a href="#3-问题验证" class="headerlink" title="3. 问题验证"></a>3. 问题验证</h2><p>按上述解决方案修改之后，进行验证，发现问题已经解决了，可以正常显示代码。</p>
+<p>如下图所示：</p>
+<p><img src="/2017/07/20/hexo-code-block-blank-line-incorrect/code_correct_verify.png" alt=""></p>
+<p>而对应的代码片段如下：</p>
+<p><img src="/2017/07/20/hexo-code-block-blank-line-incorrect/line_blank_correct_verfy.png" alt=""></p>
+<p>可以看到空行对应的div的内容全部被替换成了</p>
+<h2 id="4-参考文献"><a href="#4-参考文献" class="headerlink" title="4. 参考文献"></a>4. 参考文献</h2><ol>
+<li><a href="https://stackoverflow.com/questions/4171286/how-to-make-a-div-with-no-content-have-a-width" target="_blank" rel="external">How to make a DIV with no content have a width?</a></li>
+<li><a href="https://stackoverflow.com/questions/2114667/html-div-element-disappears-with-no-content" target="_blank" rel="external">HTML DIV element Disappears with no content</a></li>
+<li><a href="https://stackoverflow.com/questions/6310808/div-with-background-image-and-no-content-not-displaying" target="_blank" rel="external">Div with background image and no content not displaying</a></li>
+<li><a href="https://leokongwq.github.io/2016/10/14/hexo-codeblock-multiblank.html" target="_blank" rel="external">hexo代码块前后空白行问题</a></li>
+<li><a href="https://github.com/forsigner/fexo/issues/46" target="_blank" rel="external">代码显示行是不是有点小问题呢？</a></li>
+<li><a href="https://github.com/cosysn/hexo-blog/issues/1" target="_blank" rel="external">显示代码块存在问题，会自动删除部分空行，以及行数和代码不对齐 #1</a></li>
+</ol>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持楼兰故居</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="/images/qr-wechat.jpg" alt="">
+          </li>
+        
+          <li class="item">
+            <img src="/images/qr-alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'https://cosysn.github.io/2017/07/20/hexo-code-block-blank-line-incorrect/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
